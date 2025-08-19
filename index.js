@@ -1,49 +1,104 @@
-function hisobla() {
-    const masofa = parseFloat(document.getElementById("masofa").value);
+// 4-masala
+// const reapit = (str) => {
+//     let res = []
+//     for (let i = str.length-1; i > -1; i--) {
+//         res.push(str[i])
 
-    if (isNaN(masofa) || masofa <= 0) {
-        alert("Iltimos, masofani to‘g‘ri kiriting!");
-        return;
-    }
+//     }
+//     return res.join('')
+// }
+// console.log(reapit('asd'));
 
-    const transportlar = {
-        "Piyoda": 3.6,
-        "Velosiped": 20.1,
-        "Mashina": 70,
-        "Samolyot": 800
-    };
+// 5-masala
+// function rotate(nums, k) {
+//   let n = nums.length
+//   k = k % n
 
-    function vaqtniFormatla(soatDecimal) {
-        let soat = Math.floor(soatDecimal);
-        let daqiqa = Math.round((soatDecimal - soat) * 60);
-        if (daqiqa === 60) { soat += 1; daqiqa = 0; }
-        return `${soat} soat ${daqiqa} daqiqa`;
-    }
+//   let rotated = nums.slice(n - k).concat(nums.slice(0, n - k))
+//   return rotated
+// }
 
-    document.getElementById("piyoda").textContent =
-        `Piyoda: ${vaqtniFormatla(masofa / transportlar["Piyoda"])}`;
-    document.getElementById("velosiped").textContent =
-        `Velosiped: ${vaqtniFormatla(masofa / transportlar["Velosiped"])}`;
-    document.getElementById("mashina").textContent =
-        `Mashina: ${vaqtniFormatla(masofa / transportlar["Mashina"])}`;
-    document.getElementById("samolyot").textContent =
-        `Samolyot: ${vaqtniFormatla(masofa / transportlar["Samolyot"])}`;
-}
-function convert() {
-    const celsius = parseFloat(document.getElementById("celsius").value);
-    const fahrenheit = (celsius * 9/5) + 32;
-    document.getElementById("fahrenheit").value = fahrenheit.toFixed(1) + " °F";
-}
+// console.log(rotate([1,2,3,4,5,6,7], 3));
 
-function jog() {
-    const temp = parseFloat(document.getElementById("tempJog").value);
-    const raining = document.getElementById("rain").checked;
-    const hallOpen = document.getElementById("hall").checked;
-    let result = "borib bolmaydi";
-    if (!raining && temp >= 0 && temp <= 35) {
-        result = "borsa boladi";
-    } else if (raining && hallOpen) {
-        result = "borsa boladi";
-    }
-    document.getElementById("jogResult").textContent = result;
-}
+// 6-masala
+// const objNums = (obj) => {
+//     let object = Object.keys(obj)
+//     let res = 0
+//     object.forEach(item => {
+//         if (!isNaN(obj[item])) {
+//             res += Number(obj[item])
+//         }
+//     });
+//     return res
+// }
+// console.log(objNums({
+//     a: 1,
+//     b: 'ds',
+//     c: 32,
+// }));
+
+// 7-masala
+// function mySplit(str, delimiter) {
+//   let result = []
+//   let temp = ""
+//   for (let i = 0; i < str.length; i++) {
+//     if (str[i] === delimiter) {
+//       result.push(temp)
+//       temp = ""
+//     } else {
+//       temp += str[i]
+//     }
+//   }
+//   result.push(temp)
+//   return result
+// }
+
+// console.log(mySplit("salom dunyo yaxshimisiz", " ")); 
+
+// 8-masala
+// function isPowerOfFour(n) {
+//   if (n < 1) return false
+//   while (n % 4 === 0) {
+//     n /= 4;
+//   }
+//   return n === 1
+// }
+// console.log(isPowerOfFour(1));  
+
+// 9-masala
+// function reverseList(arr) {
+//   let left = 0
+//   let right = arr.length - 1
+
+//   while (left < right) {
+//     let temp = arr[left]
+//     arr[left] = arr[right]
+//     arr[right] = temp
+//     left++
+//     right--
+//   }
+//   return arr
+// }
+// console.log(reverseList(["h","e","l","l","o"])); 
+
+// 10-masala
+// function reverseVowels(s) {
+//   let vowels = "aeiouAEIOU"
+//   let arr = s.split("")
+//   let left = 0, right = arr.length - 1
+
+//   while (left < right) {
+//     if (!vowels.includes(arr[left])) {
+//       left++
+//     } else if (!vowels.includes(arr[right])) {
+//       right--
+//     } else {
+//       [arr[left], arr[right]] = [arr[right], arr[left]]
+//       left++
+//       right--
+//     }
+//   }
+
+//   return arr.join("");
+// }
+// console.log(reverseVowels("IceCreAm")); 
