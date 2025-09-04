@@ -1,63 +1,62 @@
 // 1-masala
-// function mostFrequent(arr) {
-//   const map = {};
-//   let maxCount = 0, element = null;
-//   for (let num of arr) {
-//     map[num] = (map[num] || 0) + 1;
-//     if (map[num] > maxCount) {
-//       maxCount = map[num];
-//       element = num;
-//     }
-//   }
-//   return { element, count: maxCount };
-// }
-// console.log(mostFrequent([3, 7, 3, 2, 3, 7, 8, 7]));
+// const {plus,minus} = require('./math.js')
+// console.log(plus(2,2));
+// console.log(minus(2,1));
 
 // 2-masala
-// const countEvens = (arr) => arr.filter(x => x % 2 === 0).length;
-// console.log(countEvens([2, 1, 2, 3, 4]));
+// const fs = require('fs')
+// fs.writeFileSync('data.txt','salom dunyo')
+// console.log(fs.readFileSync('data.txt').toString());
 
 // 3-masala
-// const uniqueElements = (arr) => arr.filter(x => arr.indexOf(x) === arr.lastIndexOf(x));
-// console.log(uniqueElements([1, 2, 2, 3, 4, 4, 5]));
+// const { Buffer } = require("buffer");
+// let arr = [];
+// for (let i = 0; i < 10; i++) {
+//   arr.push(Math.floor(Math.random() * 100));
+// }
+// let arrRes = arr.join(',')
+// const buf = Buffer.from(arrRes, "utf8");
+// console.log(buf);
+// console.log(buf.toString());
 
 // 4-masala
-// const reverseWords = (str) => str.split(' ').reverse().join(' ');
-// console.log(reverseWords("hello world"));
+// const fs = require('fs')
+// fs.mkdirSync('html')
+// fs.appendFileSync('html/index.html','')
+// fs.mkdirSync('static')
+// fs.appendFileSync('static/script.js','')
+// fs.appendFileSync('static/script.ts','')
+// fs.appendFileSync('static/style.css','')
+// fs.appendFileSync('go.mod','')
+// fs.appendFileSync('go.sum','')
+// fs.appendFileSync('golang-todo-app','')
+// fs.appendFileSync('main.go','')
+// fs.appendFileSync('README.md','')
+// fs.appendFileSync('tsconfig.json','')
 
-// 5-masala
-// const isOnlyDigits = (str) => /^\d+$/.test(str);
-// console.log(isOnlyDigits("12345"));
+// qo'shimchalar
+// const fs = require('fs')
+// fs.mkdirSync('__int_tests__')
+// fs.mkdirSync('__mocks__')
+// fs.mkdirSync('__tests__')
+// fs.mkdirSync('covarage')
+// fs.mkdirSync('dist')
+// fs.mkdirSync('docs')
+// fs.mkdirSync('docs/api')
+// fs.mkdirSync('public')
+// fs.mkdirSync('scripts')
+// fs.mkdirSync('scripts/deployment')
+// fs.mkdirSync('src')
+// fs.appendFileSync('src/.gitignore',"true")
+// fs.appendFileSync('src/index.js',"true")
+// fs.appendFileSync('src/package.json',"true")
 
-// 6-masala
-// const filterByE = (arr) => arr.filter(word => (word.match(/e/g) || []).length >= 2);
-// console.log(filterByE(["elephant", "apple", "tree", "cheese", "banana"]));
-
-// 7-masala
-// function onlyAlphabetical(arr) {
-//   return arr.filter(word => {
-//     for (let i = 1; i < word.length; i++) {
-//       if (word[i] < word[i - 1]) return false;
-//     }
-//     return true;
-//   });
-// }
-// console.log(onlyAlphabetical(["abs", "dog", "xyz", "apple"]));
-
-// 8-masala
-// const toArray = (num) => num === 0 ? [0] : String(num).split('').map(Number)
-// const toNumber = (arr) => Number(arr.join(''))
-// console.log(toArray(235));
-// console.log(toNumber([2, 3, 5]));
-
-// 9-masala
-// function measureDepth(arr) {
-//   if (!Array.isArray(arr)) return 0;
-//   if (arr.length === 0) return 1;
-//   return 1 + Math.max(...arr.map(measureDepth));
-// }
-// console.log(measureDepth([[[[[]]]]]));
-
-// 10-masala
-// const digitSum = (num) => String(num).split('').reduce((sum, d) => sum + Number(d), 0)
-// console.log(digitSum(4567)); 
+// fs.mkdirSync('src')
+// fs.mkdirSync('src/companents')
+// fs.mkdirSync('src/companents/nav')
+// fs.mkdirSync('src/companents/nav/navBar')
+// fs.appendFileSync('src/companents/nav/navBar/index.js',"salom")
+// fs.mkdirSync('src/companents/nav/navBarMenu')
+// fs.appendFileSync('src/companents/nav/navBarMenu/index.js',"salom")
+// fs.mkdirSync('src/companents/nav/navBarSeach')
+// fs.appendFileSync('src/companents/nav/navBarSeach/index.js',"salom")
