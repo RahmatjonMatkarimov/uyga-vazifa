@@ -10,20 +10,20 @@ const app = http.createServer((req, res) => {
 
   const reqId = req.url.split("/")[2];
 
-  //users
-  if (req.method === "GET" && req.url === "/users") {
-    const data = read_file("users.json");
+  //medicine
+  if (req.method === "GET" && req.url === "/medicine") {
+    const data = read_file("medicine.json");
     res.writeHead(200, headers);
     res.end(JSON.stringify(data));
   }
 
-  if (req.method === "POST" && req.url === "/users") {
+  if (req.method === "POST" && req.url === "/medicine") {
     req.on("data", (chunk) => {
       const reqData = JSON.parse(chunk);
       reqData.id = uuid.v4();
-      const data = read_file("users.json");
+      const data = read_file("medicine.json");
       data.push(reqData);
-      write_file("users.json", data);
+      write_file("medicine.json", data);
     });
 
     res.writeHead(201, headers);
@@ -34,26 +34,26 @@ const app = http.createServer((req, res) => {
     );
   }
 
-  if (req.method === "GET" && req.url === "/users/" + reqId) {
-    const data = read_file("users.json");
+  if (req.method === "GET" && req.url === "/medicine/" + reqId) {
+    const data = read_file("medicine.json");
     const findData = data.find((item) => item.id === reqId);
     res.writeHead(200, headers);
     res.end(JSON.stringify(findData));
   }
 
-  if (req.method === "PUT" && req.url === "/users/" + reqId) {
+  if (req.method === "PUT" && req.url === "/medicine/" + reqId) {
     req.on("data", (chunk) => {
-      const users = read_file("users.json");
+      const medicine = read_file("medicine.json");
       const { name } = JSON.parse(chunk);
-      const findUsers = users.find((item) => item.id === reqId);
-      if (findUsers) {
-        for (let i = 0; i < users.length; i++) {
-          const item = users[i];
+      const findmedicine = medicine.find((item) => item.id === reqId);
+      if (findmedicine) {
+        for (let i = 0; i < medicine.length; i++) {
+          const item = medicine[i];
           if (item.id === reqId) {
-            users[i].name = name ? name : users[i].name;
+            medicine[i].name = name ? name : medicine[i].name;
           }
         }
-        write_file("users.json", users);
+        write_file("medicine.json", medicine);
         res.writeHead(201, headers);
         return res.end(
           JSON.stringify({
@@ -71,17 +71,17 @@ const app = http.createServer((req, res) => {
     });
   }
 
-  if (req.method === "DELETE" && req.url === "/users/" + reqId) {
-    const data = read_file("users.json");
+  if (req.method === "DELETE" && req.url === "/medicine/" + reqId) {
+    const data = read_file("medicine.json");
     let result = [];
-    const findUsers = data.find((item) => item.id === reqId);
-    if (findUsers) {
+    const findmedicine = data.find((item) => item.id === reqId);
+    if (findmedicine) {
       for (let i = 0; i < data.length; i++) {
         if (data[i].id !== reqId) {
           result.push(data[i]);
         }
       }
-      write_file("users.json", result);
+      write_file("medicine.json", result);
       res.writeHead(201, headers);
       return res.end(
         JSON.stringify({
@@ -97,94 +97,85 @@ const app = http.createServer((req, res) => {
       );
     }
   }
-  
 
-  //products
-  if (req.method === "GET" && req.url === "/products") {
-    const data = read_file("products.json");
-    res.writeHead(200, headers);
-    res.end(JSON.stringify(data));
-  }
-
-  if (req.method === "POST" && req.url === "/products") {
+  if (req.method === "POST" && req.url === "/register") {
     req.on("data", (chunk) => {
-      const reqData = JSON.parse(chunk);
-      reqData.id = uuid.v4();
-      const data = read_file("products.json");
-      data.push(reqData);
-      write_file("products.json", data);
-    });
-
-    res.writeHead(201, headers);
-    res.end(
-      JSON.stringify({
-        massage: "yaratildi",
-      })
-    );
-  }
-
-  if (req.method === "GET" && req.url === "/products/" + reqId) {
-    const data = read_file("products.json");
-    const findData = data.find((item) => item.id === reqId);
-    res.writeHead(200, headers);
-    res.end(JSON.stringify(findData));
-  }
-
-  if (req.method === "PUT" && req.url === "/products/" + reqId) {
-    req.on("data", (chunk) => {
-      const products = read_file("products.json");
-      const { name } = JSON.parse(chunk);
-      const findproducts = products.find((item) => item.id === reqId);
-      if (findproducts) {
-        for (let i = 0; i < products.length; i++) {
-          const item = products[i];
-          if (item.id === reqId) {
-            products[i].name = name ? name : products[i].name;
-          }
+      const data = read_file("auth.json");
+      const { username, password } = JSON.parse(chunk);
+      let isUser = false;
+      for (let i = 0; i < data.length; i++) {
+        const item = data[i];
+        if (item.username === username) {
+          isUser = true;
         }
-        write_file("products.json", products);
+      }
+
+      if (!isUser) {
+        data.push({
+          username,
+          password: btoa(password),
+          id: uuid.v4(),
+        });
+        write_file("auth.json", data);
         res.writeHead(201, headers);
         return res.end(
           JSON.stringify({
-            massage: "yangilandi",
+            massage: "yaratildi",
           })
         );
-      } else {
+      }
+      {
+        res.writeHead(409, headers);
+        return res.end(
+          JSON.stringify({
+            massage: "bu foydalanuvchi nomi allaqachion bor",
+          })
+        );
+      }
+    });
+  }
+
+  if (req.method === "POST" && req.url === "/login") {
+    req.on("data", (chunk) => {
+      let { username, password } = JSON.parse(chunk);
+      const users = read_file("auth.json");
+
+      if (!username || !password) {
         res.writeHead(400, headers);
-        res.end(
+        return res.end(
+          JSON.stringify({
+            massage: "username yoki password kiritilmagan",
+          })
+        );
+      }
+
+      let foundedUser = users.find((item) => item.username === username);
+      if (!foundedUser) {
+        res.writeHead(404, headers);
+        return res.end(
           JSON.stringify({
             massage: "user topilmadi",
           })
         );
       }
-    });
-  }
 
-  if (req.method === "DELETE" && req.url === "/products/" + reqId) {
-    const data = read_file("products.json");
-    let result = [];
-    const findproducts = data.find((item) => item.id === reqId);
-    if (findproducts) {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].id !== reqId) {
-          result.push(data[i]);
-        }
+      if (atob(foundedUser.password) !== password) {
+        res.writeHead(400, headers);
+        return res.end(
+          JSON.stringify({
+            massage: "Parol notogri",
+          })
+        );
       }
-      write_file("products.json", result);
+
       res.writeHead(201, headers);
       return res.end(
         JSON.stringify({
-          massage: "O'chirildi",
+          massage: "hammasi joyida",
+          token: btoa(username),
         })
       );
-    } else {
-      res.writeHead(400, headers);
-      res.end(
-        JSON.stringify({
-          massage: "user topilmadi",
-        })
-      );
-    }
+    });
   }
 });
 
