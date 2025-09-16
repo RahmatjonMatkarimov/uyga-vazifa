@@ -1,184 +1,239 @@
-const http = require("http");
+const express = require("express");
 const { read_file, write_file } = require("./utils/file_managment");
 const uuid = require("uuid");
+require("dotenv").config();
 
-const app = http.createServer((req, res) => {
-  const headers = {
-    "content-type": "application/json",
-    "access-control-allow-origin": "*",
-  };
+const app = express();
+const PORT = process.env.PORT;
+app.use(express.json());
 
-  const reqId = req.url.split("/")[2];
-
-  //medicine
-  if (req.method === "GET" && req.url === "/medicine") {
-    const data = read_file("medicine.json");
-    res.writeHead(200, headers);
-    res.end(JSON.stringify(data));
-  }
-
-  if (req.method === "POST" && req.url === "/medicine") {
-    req.on("data", (chunk) => {
-      const reqData = JSON.parse(chunk);
-      reqData.id = uuid.v4();
-      const data = read_file("medicine.json");
-      data.push(reqData);
-      write_file("medicine.json", data);
-    });
-
-    res.writeHead(201, headers);
-    res.end(
-      JSON.stringify({
-        massage: "yaratildi",
-      })
-    );
-  }
-
-  if (req.method === "GET" && req.url === "/medicine/" + reqId) {
-    const data = read_file("medicine.json");
-    const findData = data.find((item) => item.id === reqId);
-    res.writeHead(200, headers);
-    res.end(JSON.stringify(findData));
-  }
-
-  if (req.method === "PUT" && req.url === "/medicine/" + reqId) {
-    req.on("data", (chunk) => {
-      const medicine = read_file("medicine.json");
-      const { name } = JSON.parse(chunk);
-      const findmedicine = medicine.find((item) => item.id === reqId);
-      if (findmedicine) {
-        for (let i = 0; i < medicine.length; i++) {
-          const item = medicine[i];
-          if (item.id === reqId) {
-            medicine[i].name = name ? name : medicine[i].name;
-          }
-        }
-        write_file("medicine.json", medicine);
-        res.writeHead(201, headers);
-        return res.end(
-          JSON.stringify({
-            massage: "yangilandi",
-          })
-        );
-      } else {
-        res.writeHead(400, headers);
-        res.end(
-          JSON.stringify({
-            massage: "user topilmadi",
-          })
-        );
-      }
-    });
-  }
-
-  if (req.method === "DELETE" && req.url === "/medicine/" + reqId) {
-    const data = read_file("medicine.json");
-    let result = [];
-    const findmedicine = data.find((item) => item.id === reqId);
-    if (findmedicine) {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].id !== reqId) {
-          result.push(data[i]);
-        }
-      }
-      write_file("medicine.json", result);
-      res.writeHead(201, headers);
-      return res.end(
-        JSON.stringify({
-          massage: "O'chirildi",
-        })
-      );
-    } else {
-      res.writeHead(400, headers);
-      res.end(
-        JSON.stringify({
-          massage: "user topilmadi",
-        })
-      );
-    }
-  }
-
-  if (req.method === "POST" && req.url === "/register") {
-    req.on("data", (chunk) => {
-      const data = read_file("auth.json");
-      const { username, password } = JSON.parse(chunk);
-      let isUser = false;
-      for (let i = 0; i < data.length; i++) {
-        const item = data[i];
-        if (item.username === username) {
-          isUser = true;
-        }
-      }
-
-      if (!isUser) {
-        data.push({
-          username,
-          password: btoa(password),
-          id: uuid.v4(),
-        });
-        write_file("auth.json", data);
-        res.writeHead(201, headers);
-        return res.end(
-          JSON.stringify({
-            massage: "yaratildi",
-          })
-        );
-      }
-      {
-        res.writeHead(409, headers);
-        return res.end(
-          JSON.stringify({
-            massage: "bu foydalanuvchi nomi allaqachion bor",
-          })
-        );
-      }
-    });
-  }
-
-  if (req.method === "POST" && req.url === "/login") {
-    req.on("data", (chunk) => {
-      let { username, password } = JSON.parse(chunk);
-      const users = read_file("auth.json");
-
-      if (!username || !password) {
-        res.writeHead(400, headers);
-        return res.end(
-          JSON.stringify({
-            massage: "username yoki password kiritilmagan",
-          })
-        );
-      }
-
-      let foundedUser = users.find((item) => item.username === username);
-      if (!foundedUser) {
-        res.writeHead(404, headers);
-        return res.end(
-          JSON.stringify({
-            massage: "user topilmadi",
-          })
-        );
-      }
-
-      if (atob(foundedUser.password) !== password) {
-        res.writeHead(400, headers);
-        return res.end(
-          JSON.stringify({
-            massage: "Parol notogri",
-          })
-        );
-      }
-
-      res.writeHead(201, headers);
-      return res.end(
-        JSON.stringify({
-          massage: "hammasi joyida",
-          token: btoa(username),
-        })
-      );
-    });
-  }
+////////////////////////////////////////// fruits
+app.get("/fruits", (req, res) => {
+  res.status(200).send(read_file("fruits.json"));
 });
 
-app.listen(3000, () => {
-  console.log("backent ishladi");
+app.post("/fruits", (req, res) => {
+  const { name } = req.body;
+  let fruits = read_file("fruits.json");
+  if (name) {
+    fruits.push({
+      id: uuid.v4(),
+      name,
+    });
+    write_file("fruits.json", fruits);
+    return res.status(201).send({
+      massage: "yaratildi",
+    });
+  }
+
+  return res.status(400).send({
+    massage: "name kiritilmagan",
+  });
+});
+
+app.get("/fruits/:id", (req, res) => {
+  const { id } = req.params;
+  const fruits = read_file("fruits.json");
+  const foundedfruits = fruits.find((item) => item.id === id);
+  if (foundedfruits) {
+    return res.status(200).send(foundedfruits);
+  }
+  return res.status(404).send({
+    massage: "fruits not found",
+  });
+});
+
+app.put("/fruits", (req, res) => {
+  const { name, id } = req.body;
+  const fruits = read_file("fruits.json");
+  const foundedfruits = fruits.find((item) => item.id === id);
+  if (!foundedfruits) {
+    return res.status(404).json({
+      massage: "not found",
+    });
+  }
+  fruits.forEach((item) => {
+    if (item.id === id) {
+      item.name = name ? name : item.name;
+    }
+  });
+  write_file("fruits.json", fruits);
+  res.status(201).json({
+    massage: "yangilandi",
+  });
+});
+
+app.delete("/fruits/:id", (req, res) => {
+  const { id } = req.params;
+  const fruits = read_file("fruits.json");
+  const foundedfruits = fruits.find((item) => item.id === id);
+  if (!foundedfruits) {
+    return res.status(404).json({
+      massage: "not found",
+    });
+  }
+  fruits.forEach((item, index) => {
+    if (item.id === id) {
+      fruits.splice(index, 1);
+    }
+  });
+  write_file("fruits.json", fruits);
+  res.status(201).json({
+    massage: "Ochirildi",
+  });
+});
+
+app.get("/drinks", (req, res) => {
+  res.status(200).send(read_file("drinks.json"));
+});
+
+app.post("/drinks", (req, res) => {
+  const { name } = req.body;
+  let drinks = read_file("drinks.json");
+  if (name) {
+    drinks.push({
+      id: uuid.v4(),
+      name,
+    });
+    write_file("drinks.json", drinks);
+    return res.status(201).send({
+      massage: "yaratildi",
+    });
+  }
+
+  return res.status(400).send({
+    massage: "name kiritilmagan",
+  });
+});
+
+app.get("/drinks/:id", (req, res) => {
+  const { id } = req.params;
+  const drinks = read_file("drinks.json");
+  const foundedDrinks = drinks.find((item) => item.id === id);
+  if (foundedDrinks) {
+    return res.status(200).send(foundedDrinks);
+  }
+  return res.status(404).send({
+    massage: "drinks not found",
+  });
+});
+
+app.put("/drinks", (req, res) => {
+  const { name, id } = req.body;
+  const drinks = read_file("drinks.json");
+  const foundedDrinks = drinks.find((item) => item.id === id);
+  if (!foundedDrinks) {
+    return res.status(404).json({
+      massage: "not found",
+    });
+  }
+  drinks.forEach((item) => {
+    if (item.id === id) {
+      item.name = name ? name : item.name;
+    }
+  });
+  write_file("drinks.json", drinks);
+  res.status(201).json({
+    massage: "yangilandi",
+  });
+});
+
+app.delete("/drinks/:id", (req, res) => {
+  const { id } = req.params;
+  const drinks = read_file("drinks.json");
+  const foundedDrinks = drinks.find((item) => item.id === id);
+  if (!foundedDrinks) {
+    return res.status(404).json({
+      massage: "not found",
+    });
+  }
+  drinks.forEach((item, index) => {
+    if (item.id === id) {
+      drinks.splice(index, 1);
+    }
+  });
+  write_file("drinks.json", drinks);
+  res.status(201).json({
+    massage: "Ochirildi",
+  });
+});
+
+////////////////////////////////////////// animals
+app.get("/animals", (req, res) => {
+  res.status(200).send(read_file("animals.json"));
+});
+
+app.post("/animals", (req, res) => {
+  const { name } = req.body;
+  let animals = read_file("animals.json");
+  if (name) {
+    animals.push({
+      id: uuid.v4(),
+      name,
+    });
+    write_file("animals.json", animals);
+    return res.status(201).send({
+      massage: "yaratildi",
+    });
+  }
+
+  return res.status(400).send({
+    massage: "name kiritilmagan",
+  });
+});
+
+app.get("/animals/:id", (req, res) => {
+  const { id } = req.params;
+  const animals = read_file("animals.json");
+  const foundedanimals = animals.find((item) => item.id === id);
+  if (foundedanimals) {
+    return res.status(200).send(foundedanimals);
+  }
+  return res.status(404).send({
+    massage: "animals not found",
+  });
+});
+
+app.put("/animals", (req, res) => {
+  const { name, id } = req.body;
+  const animals = read_file("animals.json");
+  const foundedanimals = animals.find((item) => item.id === id);
+  if (!foundedanimals) {
+    return res.status(404).json({
+      massage: "not found",
+    });
+  }
+  animals.forEach((item) => {
+    if (item.id === id) {
+      item.name = name ? name : item.name;
+    }
+  });
+  write_file("animals.json", animals);
+  res.status(201).json({
+    massage: "yangilandi",
+  });
+});
+
+app.delete("/animals/:id", (req, res) => {
+  const { id } = req.params;
+  const animals = read_file("animals.json");
+  const foundedanimals = animals.find((item) => item.id === id);
+  if (!foundedanimals) {
+    return res.status(404).json({
+      massage: "not found",
+    });
+  }
+  animals.forEach((item, index) => {
+    if (item.id === id) {
+      animals.splice(index, 1);
+    }
+  });
+  write_file("animals.json", animals);
+  res.status(201).json({
+    massage: "Ochirildi",
+  });
+});
+
+app.listen(PORT, () => {
+  console.log("backent ishladi " + PORT + " Portda");
 });
