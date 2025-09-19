@@ -6,14 +6,13 @@ const {
   PostProducts,
   DeleteProducts,
 } = require("../controller/products.ctr");
-const authMiddleWare = require("../middleware/auth.middleWare");
 
 const productRouter = Router();
 
-productRouter.get("/products", getProducts);
-productRouter.get("/products/:id", getOneProducts);
-productRouter.put("/products/:id",authMiddleWare, putProducts);
-productRouter.delete("/products/:id",authMiddleWare, DeleteProducts);
-productRouter.post("/products/", authMiddleWare, PostProducts);
+productRouter.get("/", getProducts);
+productRouter.get("/product/:id", getOneProducts);
+productRouter.post("/product-update/:id", putProducts);
+productRouter.post("/product-delete/:id", DeleteProducts);
+productRouter.post("/products/", PostProducts);
 
 module.exports = productRouter;

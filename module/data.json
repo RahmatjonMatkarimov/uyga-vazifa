@@ -1,26 +1,8 @@
 [
     {
-        "id": "fcb69ea9-b493-4e84-9f32-c3c347732b4e",
-        "name": "suv"
-    },
-    {
-        "id": "2335ee9d-e279-49b3-bc36-3ea8797004fe",
-        "name": "suv"
-    },
-    {
-        "id": "a8db45cf-4ff3-4de8-ba6b-50f28000c2d7",
-        "name": "suv"
-    },
-    {
-        "id": "a17b0c19-43a2-4478-80f8-35ad92080f42",
-        "name": "suv"
-    },
-    {
-        "id": "f0d2b860-3950-4942-94ee-ae0aa7b1ea06",
-        "name": "suv"
-    },
-    {
-        "id": "924aef86-f204-45d1-aad5-bf8dea3b38ab",
-        "name": "suv"
+        "id": "ebf91835-fe99-4b26-aca2-833fca746bd7",
+        "name": "lavash3",
+        "price": "1234",
+        "img": "https://picsum.photos/400/400"
     }
 ]

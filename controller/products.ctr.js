@@ -1,9 +1,10 @@
 const { write_file, read_file } = require("../utils/file_managment");
-const uuid = require("uuid")
+const uuid = require("uuid");
 
 const getProducts = async (req, res) => {
   try {
-    res.status(200).send(read_file("data"));
+    const data = read_file("data");
+    res.status(200).render("./index", { data });
   } catch (error) {
     console.error(error);
   }
@@ -13,33 +14,34 @@ const getOneProducts = async (req, res) => {
     const { id } = req.params;
     const data = read_file("data");
     const foundedData = data.find((item) => item.id === id);
-    if (foundedData) {
-      return res.status(200).send(foundedData);
+    if (!foundedData) {
+      return res.status(404).send({
+        massage: "data not found",
+      });
     }
-    return res.status(404).send({
-      massage: "data not found",
-    });
+    return res.status(200).render("oneProduct",{foundedData});
   } catch (error) {
     console.error(error);
   }
 };
 const PostProducts = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, price } = req.body;
     let data = read_file("data");
     if (name) {
       data.push({
         id: uuid.v4(),
         name,
+        price,
+        img: "https://picsum.photos/400/400",
       });
       write_file("data", data);
-      return res.status(201).send({
-        massage: "yaratildi",
+      return res.redirect("http://localhost:3000");
+    } else {
+      return res.status(400).send({
+        massage: "name kiritilmagan",
       });
     }
-    return res.status(400).send({
-      massage: "name kiritilmagan",
-    });
   } catch (error) {
     console.error(error);
   }
@@ -61,9 +63,7 @@ const putProducts = async (req, res) => {
       }
     });
     write_file("data", data);
-    res.status(201).json({
-      massage: "yangilandi",
-    });
+    res.redirect("http://localhost:3000");
   } catch (error) {
     console.error(error);
   }
@@ -84,9 +84,7 @@ const DeleteProducts = async (req, res) => {
       }
     });
     write_file("data", data);
-    res.status(201).json({
-      massage: "Ochirildi",
-    });
+    res.redirect("http://localhost:3000");
   } catch (error) {
     console.error(error);
   }
