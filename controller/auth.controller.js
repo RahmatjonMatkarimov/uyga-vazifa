@@ -57,7 +57,7 @@ const register = async (req, res) => {
       id: v4(),
       username,
       password: await bcrypt.hash(password, 12),
-      role: "admin",
+      role: "user",
     });
     write_file("users", users);
     res.status(201).json({
