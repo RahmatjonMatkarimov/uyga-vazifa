@@ -7,6 +7,7 @@ const {
   DeleteProducts,
 } = require("../controller/products.controller");
 const productsMiddleWare = require("../middleware/products.middleWare");
+
 const productRouter = Router();
 
 productRouter.get("/products", getProducts);
