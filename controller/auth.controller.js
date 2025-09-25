@@ -1,106 +1,79 @@
 const { v4 } = require("uuid");
-const { write_file, read_file } = require("../utils/file_managment");
+const { read_file, write_file } = require("../utils/file_managment");
+const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-
-const login = async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    if (!username || !password) {
-      return req.status(400).json({
-        massage: "username va parol majburiy",
-      });
-    }
-    const users = read_file("users");
-    const foundedUser = users.find((item) => username === item.username);
-    if (!foundedUser) {
-      return res.status(400).json({ massage: "User topilmadi" });
-    }
-    const decode = await bcrypt.compare(password, foundedUser.password);
-    if (decode) {
-      const payload = {
-        id: foundedUser.id,
-        username: foundedUser.username,
-        role: foundedUser.role,
-      };
-      const token = jwt.sign(payload, process.env.SECRET_KEY, {
-        expiresIn: "1h",
-      });
-
-      return res.status(200).json({
-        token,
-      });
-    } else {
-      return res.status(400).json({ massage: "parol notogri" });
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 const register = async (req, res) => {
   try {
     const { username, password } = req.body;
+    const users = read_file("users");
     if (!username || !password) {
       return res.status(400).json({
-        massage: "barcha malumotlar kiritilmagan",
+        massage: "barcha maydonni toldiring",
       });
     }
-    let users = read_file("users");
+
     const foundedUser = users.find((item) => item.username === username);
+
     if (foundedUser) {
-      return res.status(401).json({
-        massage: "bu foydalanuvchi allaqachon mavjud",
+      return res.status(400).json({
+        massage: "bunday foydalanuvchi allaqachon mavjud",
       });
     }
+
     users.push({
       id: v4(),
       username,
-      password: await bcrypt.hash(password, 12),
-      role: "user",
+      password: await bcryptjs.hash(password, 12),
     });
+
     write_file("users", users);
     res.status(201).json({
       massage: "yaratildi",
     });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    res.status(500).json(err);
   }
 };
-
-const updateRole = async (req, res) => {
+const login = async (req, res) => {
   try {
-    const { username, role } = req.body;
-    if (!username || !role) {
+    const { username, password } = req.body;
+    const users = read_file("users");
+    if (!username || !password) {
       return res.status(400).json({
-        massage: "barcha malumotlar kiritilmagan",
+        massage: "barcha maydonni toldiring",
       });
     }
-    let users = read_file("users");
+
     const foundedUser = users.find((item) => item.username === username);
+
     if (!foundedUser) {
-      return res.status(401).json({
-        massage: "bunday foydalanuvchi mavjud emas",
+      return res.status(400).json({
+        massage: "bunday foydalanuvchi topilmadi",
       });
     }
 
-    users.forEach((item) => {
-      if (item.username === foundedUser.username) {
-        item.role = role;
-      }
-    });
+    const decode = await bcryptjs.compare(password, foundedUser.password);
+    if (!decode) {
+      return res.status(400).json({
+        massage: "parol xato",
+      });
+    }
 
-    write_file("users", users);
+    const body = {
+      id: foundedUser.id,
+    };
+    const secret_key = process.env.SECRET_KEY;
+    const token = jwt.sign(body, secret_key, { expiresIn: "1h" });
     res.status(201).json({
-      massage: "yangilandi",
+      massage: token,
     });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    res.status(500).json(err);
   }
 };
 
 module.exports = {
-  register,
-  login,
-  updateRole
-};
+    login,
+    register
+}

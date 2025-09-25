@@ -1,14 +1,9 @@
 const { Router } = require("express");
-const {
-  login,
-  register,
-  updateRole
-} = require("../controller/auth.controller");
-const SuperAdminMiddleWare = require("../middleware/SuperAdmin.middleWare");
-const authRouter = Router();
+const { login, register } = require("../controller/auth.controller");
 
-authRouter.post("/login", login);
-authRouter.post("/register", register);
-authRouter.post("/update_role",SuperAdminMiddleWare, updateRole);
+const authRouter = Router()
 
-module.exports = authRouter;
+authRouter.post("/login",login)
+authRouter.post("/register",register)
+
+module.exports = authRouter

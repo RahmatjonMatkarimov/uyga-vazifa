@@ -17,13 +17,7 @@ module.exports = (req, res, next) => {
     }
     const decode = jwt.verify(access_token, process.env.SECRET_KEY);
     req.user = decode;
-    if (req.user.role === "admin" || req.user.role === "superAdmin") {
-      next();
-    }else{
-      return res.status(401).json({
-        massage: "huquqingiz yoq",
-      });
-    }
+    next()
   } catch (error) {
     res.status(400).json({
       massage: error,
