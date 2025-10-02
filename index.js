@@ -1,18 +1,17 @@
 const express = require("express");
 const cors = require("cors");
-const authRouter = require("./router/auth.routes");
-const listRouter = require("./router/ToDo.routes");
+const path = require("path");
+const productRouter = require("./router/product.routes");
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT;
-app.use(express.json());
-app.use(cors({ origin: "*" }));
+const PORT = process.env.PORT || 3000;
 
-/////////router
-app.use(authRouter)
-app.use(listRouter)
+app.use(express.json());
+app.use(cors());
+app.use("/images", express.static(path.join(__dirname, "upload/images")));
+app.use(productRouter);
 
 app.listen(PORT, () => {
-  console.log("backent ishladi " + PORT + " Portda");
+  console.log("Backend ishladi " + PORT + " Portda");
 });
