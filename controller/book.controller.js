@@ -91,6 +91,25 @@ const getbooks = async (req, res) => {
 
     }
 }
+
+const search = async (req, res) => {
+    try {
+        const quary = req.quary
+        const authors = await authorSchema.find({
+            fullneme: { $regex: quary.name, $options: "i" }
+        })
+        res.status(200).json({
+            authors
+        })
+
+    } catch (err) {
+        res.status(500).json({
+            massage: err
+        })
+
+    }
+}
+
 const putbook = async (req, res) => {
     try {
         const { id } = req.params
@@ -139,5 +158,6 @@ module.exports = {
     getOnebook,
     getbooks,
     postbook,
+    search,
     putbook
 }
