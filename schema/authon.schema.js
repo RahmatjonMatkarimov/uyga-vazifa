@@ -2,38 +2,51 @@ const { Schema, model } = require("mongoose")
 
 const Author = new Schema({
     fullneme: {
-        type: "string",
-        required: true
+        type: String,
+        required: true,
+        set: val => val.trim(),
+        minLength: 3,
+        maxLength: 80,
+        match: /^[a-zA-Z\s]+$ /
     },
     bith_date: {
-        type: "string",
-        required: true
+        type: Number,
+        required: true,
+        max: 2000,
+        min: 1,
+        match: /^[1-9\s]+$ /
     },
     death_date: {
-        type: "string",
-        required: true
+        type: String,
+        required: true,
+        maxLength: 2000,
+        minLength: 1,
     },
     periot: {
-        type: "string",
-        required: true
+        type: String,
+        required: true,
+        enum: ["Temuriylar davri", "Jadid adabiyoti", "Savet davri", "Mustaqillik davri"]
     },
     img: {
-        type: "string",
-        required: true
+        type: String,
+        required: true,
+        minLength: 4
     },
     bio: {
-        type: "string",
-        required: true
+        type: String,
+        required: true,
+        minLength: 10
     },
     creativite: {
-        type: "string",
-        required: true
+        type: String,
+        required: true,
+        minLength: 5
     },
     region: {
-        type: "string",
+        type: String,
         required: true
     },
 })
 
-const authorSchema = model("Author",Author)
+const authorSchema = model("Author", Author)
 module.exports = authorSchema

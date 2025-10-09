@@ -79,7 +79,7 @@ const Deletebook = async (req, res) => {
 }
 const getbooks = async (req, res) => {
     try {
-        const books = await bookSchema.find()
+        const books = await bookSchema.find().populate("author_info")
         res.status(200).json({
             books
         })
