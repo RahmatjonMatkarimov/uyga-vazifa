@@ -45,7 +45,12 @@ const book = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Author",
         required: true
-    }
+    },
+    Citaions: {
+        type: Schema.Types.ObjectId,
+        ref: "Ctation",
+        required: true
+    },
 })
 
 const bookSchema = model("book", book)

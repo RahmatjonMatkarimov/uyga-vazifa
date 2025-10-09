@@ -38,7 +38,7 @@ const postauthor = async (req, res) => {
 const getOneauthor = async (req, res) => {
     try {
         const id = req.params.id
-        const foundedAutor = await authorSchema.findById(id)
+        const foundedAutor = await authorSchema.findById(id).populate("books")
         if (!foundedAutor) {
             return res.status(404).json({
                 massage: "mavjud emas"
@@ -79,7 +79,7 @@ const Deleteauthor = async (req, res) => {
 }
 const getauthors = async (req, res) => {
     try {
-        const authors = await authorSchema.find()
+        const authors = await authorSchema.find().populate("books")
         res.status(200).json({
             authors
         })

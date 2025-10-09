@@ -46,6 +46,11 @@ const Author = new Schema({
         type: String,
         required: true
     },
+    books: {
+        type: Schema.Types.ObjectId,
+        ref: "book",
+        required: true
+    }
 })
 
 const authorSchema = model("Author", Author)

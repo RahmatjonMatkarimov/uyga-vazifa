@@ -38,7 +38,7 @@ const postbook = async (req, res) => {
 const getOnebook = async (req, res) => {
     try {
         const id = req.params.id
-        const foundedBook = await bookSchema.findById(id)
+        const foundedBook = await bookSchema.findById(id).populate("author_info").populate("Citaions")
         if (!foundedBook) {
             return res.status(404).json({
                 massage: "mavjud emas"
@@ -79,7 +79,7 @@ const Deletebook = async (req, res) => {
 }
 const getbooks = async (req, res) => {
     try {
-        const books = await bookSchema.find().populate("author_info")
+        const books = await bookSchema.find().populate("author_info").populate("Citaions")
         res.status(200).json({
             books
         })
