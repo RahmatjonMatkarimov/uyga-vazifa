@@ -3,11 +3,11 @@ const audioSchema = require("../schema/abook.schema")
 const postAudio = async (req, res) => {
     try {
         const {
-            book_id, author_id, audio_url
+            book_id, author_id
         } = req.body
 
         await AudioSchema.create({
-            book_id, author_id, audio_url
+            book_id, author_id, audio_url: req.file
         })
 
         res.status(201).json({

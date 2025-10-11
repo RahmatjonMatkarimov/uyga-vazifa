@@ -11,7 +11,7 @@ const audio = new Schema({
         ref: "book",
         required: true
     },
-    ebook_id: {
+    ebook_url: {
         type: String,
         required: true
     },

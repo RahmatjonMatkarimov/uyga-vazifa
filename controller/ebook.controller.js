@@ -3,11 +3,11 @@ const EbookSchema = require("../schema/ebook.schema")
 const postEbook = async (req, res) => {
     try {
         const {
-            book_id, author_id, ebook_id
+            book_id, author_id
         } = req.body
 
         await EbookSchema.create({
-            book_id, author_id, ebook_id
+            book_id, author_id, ebook_url:req.file
         })
 
         res.status(201).json({
