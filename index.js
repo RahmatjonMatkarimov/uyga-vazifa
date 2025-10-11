@@ -4,6 +4,8 @@ const connect = require("./config/mangodb");
 const authorRouter = require("./router/author.routes");
 const bookRouter = require("./router/book.routes");
 const CitationRouter = require("./router/citation.routes");
+const eBookRouter = require("./router/ebook.routes");
+const aBookRouter = require("./router/abook.routes");
 require("dotenv").config();
 
 const app = express();
@@ -14,6 +16,8 @@ app.use(cors());
 app.use(authorRouter);
 app.use(bookRouter);
 app.use(CitationRouter);
+app.use(eBookRouter);
+app.use(aBookRouter);
 
 connect()
 
