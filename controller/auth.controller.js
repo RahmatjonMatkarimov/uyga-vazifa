@@ -141,9 +141,81 @@ const logout = async (req, res) => {
     }
 }
 
+
+const forgotPassVerify = async (req, res) => {
+    try {
+        const {
+            email,
+        } = req.body
+
+        const data = Date.now() + 120000
+        const rendomNum = Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join("")
+
+        send_otp(email, rendomNum)
+
+        await authSchema.findByIdAndUpdate(foundedUser._id, {
+            otp: rendomNum,
+            otpTime: data,
+            isVerified: false
+        })
+
+        res.status(201).json({
+            massage: "verify"
+        })
+
+    } catch (err) {
+        res.status(500).json({
+            massage: err
+        })
+
+    }
+}
+
+const resetPassword = async (req, res) => {
+    try {
+        const { password, email } = req.params
+
+        if (!password, !email) {
+            return res.status(400).json({ massage: "passwprd required" })
+        }
+
+        const foundedUser = await authSchema.findOne({ email })
+
+        if (!foundedUser) {
+            return res.status(404).json({ massage: "user not found" })
+        }
+
+        const time = Date.now()
+        if (foundedUser.otpTime < time) {
+            res.status(400).json({ massage: "otp expired" })
+        }
+
+        if (foundedUser.otp !== otp) {
+            res.status(400).json({ massage: "wrong otp" })
+        }
+
+        if (foundedUser.otp === otp) {
+            const hashPassword = bcryptjs.hash(password, 12)
+            await authSchema.findByIdAndUpdate(foundedUser._id, {
+                password: hashPassword,
+                isVerified: true,
+                otp: null,
+                otpTime: null
+            })
+        }
+    } catch (err) {
+        res.status(500).json({
+            massage: err
+        })
+
+    }
+}
+
 module.exports = {
     register,
     verify,
     login,
-    logout
+    logout,
+    forgotPassVerify,
+    resetPassword
 }
