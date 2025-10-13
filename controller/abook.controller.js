@@ -6,7 +6,7 @@ const postAudio = async (req, res) => {
             book_id, author_id
         } = req.body
 
-        await AudioSchema.create({
+        await audioSchema.create({
             book_id, author_id, audio_url: req.file
         })
 
