@@ -12,10 +12,10 @@ const register = async (req, res) => {
         } = req.body
 
 
-        const foundedUser = authSchema.find({ email })
+        const foundedUser = await authSchema.find({ email })
 
-        if (foundedUser) {
-            res.status(400).json({ massage: "bu foydalanuvchi allaqachon mavjud" })
+        if (foundedUser.length) {
+           return res.status(400).json({ massage: "bu foydalanuvchi allaqachon mavjud" })
         }
 
         const hashPassword = await bcryptjs.hash(password, 12)
@@ -51,8 +51,8 @@ const verify = async (req, res) => {
             otp
         } = req.body
 
-        const foundedUser = authSchema.findOne({ email })
-        if (!foundedUser) {
+        const foundedUser = await authSchema.findOne({ email })
+        if (!foundedUser.length) {
             res.status(404).json({ massage: "user not found" })
         }
 
@@ -89,12 +89,12 @@ const login = async (req, res) => {
             password
         } = req.body
 
-        const foundedUser = authSchema.findOne({ email })
+        const foundedUser = await authSchema.findOne({ email })
 
         if (!foundedUser) {
             res.status(404).json({ massage: "user not found" })
         }
-
+        
         const decode = await bcryptjs.compare(password, foundedUser.password)
 
         if (decode) {

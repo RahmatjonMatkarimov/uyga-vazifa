@@ -15,7 +15,6 @@ const Auth = new Schema({
     },
     role: {
         type: String,
-        required: true,
         enum: {
             values: ["user", "admin", "superAdmin"]
         },

@@ -4,10 +4,16 @@ const ebookValidatorMiddleware = require("../middleware/ebook.validator.middlewa
 const multer = require("multer");
 const authorithation = require("../middleware/authorithation");
 const eBookRouter = Router();
-const upload = multer({ dest: '../upload' })
 
-eBookRouter.get("/eBook", getOneEbook)
-eBookRouter.post("/eBook",authorithation, ebookValidatorMiddleware, upload.single('ebook_url'), postEbook)
-eBookRouter.delete("/eBook/:id",authorithation, DeleteEbook)
+const path = require("path");
+const storage = multer.diskStorage({
+    destination: path.join(__dirname, "../uploads"),
+    filename: (req, file, cb) => cb(null, `${file.fieldname}${Date.now()}${path.extname(file.originalname)}`)
+})
+const upload = multer({ storage: storage })
+
+eBookRouter.get("/eBook/:id", getOneEbook)
+eBookRouter.post("/eBook", authorithation, ebookValidatorMiddleware, upload.single('ebook_url'), postEbook)
+eBookRouter.delete("/eBook/:id", authorithation, DeleteEbook)
 
 module.exports = eBookRouter;

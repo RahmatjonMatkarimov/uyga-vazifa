@@ -7,7 +7,7 @@ const postEbook = async (req, res) => {
         } = req.body
 
         await EbookSchema.create({
-            book_id, author_id, ebook_url:req.file
+            book_id, author_id, ebook_url:req.file.filename
         })
 
         res.status(201).json({

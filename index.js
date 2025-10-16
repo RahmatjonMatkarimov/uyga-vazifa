@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
-app.use(cookieParser);
+app.use(cookieParser());
 
 app.use(authorRouter);
 app.use(bookRouter);
@@ -23,6 +23,8 @@ app.use(CitationRouter);
 app.use(eBookRouter);
 app.use(aBookRouter);
 app.use(authRouter)
+
+app.get("/", (req, res) => res.status(200).json({ massage: "ishladi" }))
 
 connect()
 
