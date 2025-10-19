@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer')
+const logger = require('./logger')
 
 module.exports = async (email, otp) => {
     try {
@@ -17,7 +18,10 @@ module.exports = async (email, otp) => {
             text: "test",
             html: `<b>tasdiqlash code - ${otp}</b>`
         })
+
+        logger.info("sent otp email:" + email + ", verify code: " + otp)
     } catch (err) {
+        logger.error(`otp error: ${err}`)
         throw new Error(err)
     }
 }

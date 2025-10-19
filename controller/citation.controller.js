@@ -1,4 +1,5 @@
 const CitationSchema = require("../schema/ctation.schema")
+const logger = require("../utils/logger")
 
 const postCitation = async (req, res) => {
     try {
@@ -16,11 +17,12 @@ const postCitation = async (req, res) => {
             massage: "bajarildi"
         })
 
+        logger.info(`postCitation succues. data ----- book_id:${book_id}, desc:${desc}`)
     } catch (err) {
         res.status(500).json({
             massage: err
         })
-
+        logger.error(`postCitation error ------ ${err}`)
     }
 }
 
@@ -29,6 +31,7 @@ const DeleteCitation = async (req, res) => {
         const { id } = req.params
         const foundedCitation = await CitationSchema.findById(id)
         if (!foundedCitation) {
+            logger.info(`DeleteCitation ------- Citation not found. id:${id}`)
             return res.status(404).json({
                 massage: "mavjud emas"
             })
@@ -39,11 +42,12 @@ const DeleteCitation = async (req, res) => {
         res.status(201).json({
             massage: "bajarildi"
         })
+        logger.info(`DeleteCitation succues ---- id:${id}`)
     } catch (err) {
         res.status(500).json({
             massage: err
         })
-
+        logger.error(`DeleteCitation error ------ ${err}`)
     }
 }
 const getCitations = async (req, res) => {
@@ -52,12 +56,12 @@ const getCitations = async (req, res) => {
         res.status(200).json({
             Citations
         })
-
+        logger.info(`getCitations succues ---- id:${id}`)
     } catch (err) {
         res.status(500).json({
             massage: err
         })
-
+        logger.error(`getCitations error ------ ${err}`)
     }
 }
 
@@ -72,6 +76,7 @@ const putCitation = async (req, res) => {
 
         const foundedCitation = await CitationSchema.findById(id)
         if (!foundedCitation) {
+            logger.info(`putCitation ------- Citation not found. id:${id}`)
             return res.status(404).json({
                 massage: "mavjud emas"
             })
@@ -85,11 +90,13 @@ const putCitation = async (req, res) => {
         res.status(201).json({
             massage: "bajarildi"
         })
+        logger.info(`putCitation succues. data ----- book_id:${book_id}, desc:${desc}`)
+
     } catch (err) {
         res.status(500).json({
             massage: err
         })
-
+        logger.error(`putCitation error ------ ${err}`)
     }
 }
 

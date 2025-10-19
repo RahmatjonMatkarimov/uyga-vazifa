@@ -1,10 +1,11 @@
-const mongo = require("mongoose")
+const mongo = require("mongoose");
+const logger = require("../utils/logger");
 
 const connect = async () => {
     try {
-        await mongo.connect(process.env.MONGO_URI).then(() => console.log("connect to db")).catch((err) => console.log(err))
+        await mongo.connect(process.env.MONGO_URI).then(() => logger.info("connect to db")).catch((err) => logger.error(err))
     } catch (error) {
-        console.log(error);
+        logger.error(error);
     }
 }
 

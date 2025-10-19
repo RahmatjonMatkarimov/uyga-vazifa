@@ -1,3 +1,4 @@
+const logger = require("../utils/logger")
 const aBookValidator = require("../validator/abook.volidator")
 
 module.exports = (req, res, next) => {
@@ -5,6 +6,7 @@ module.exports = (req, res, next) => {
         const { error } = aBookValidator(req.body)
 
         if (error) {
+            logger.error(`aBookValidator middleware error --- error:${error}`)
             return res.status(400).json({ massage: error.message })
         }
         next()

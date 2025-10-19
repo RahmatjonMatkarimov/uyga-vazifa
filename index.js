@@ -8,6 +8,9 @@ const eBookRouter = require("./router/ebook.routes");
 const aBookRouter = require("./router/abook.routes");
 const cookieParser = require("cookie-parser");
 const authRouter = require("./router/auth.routes");
+const logger = require("./utils/logger");
+const swigger = require('swagger-ui-express')
+const YAML = require("yamljs")
 require("dotenv").config();
 
 const app = express();
@@ -16,6 +19,9 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
+
+const swiggerDocs = YAML.load("./doc/documentation.yml")
+app.use("/docs",swigger.serve,swigger.setup(swiggerDocs))
 
 app.use(authorRouter);
 app.use(bookRouter);
@@ -29,5 +35,5 @@ app.get("/", (req, res) => res.status(200).json({ massage: "ishladi" }))
 connect()
 
 app.listen(PORT, () => {
-  console.log("Backend ishladi " + PORT + " Portda");
+  logger.info("Backend ishladi " + PORT + " Portda");
 });

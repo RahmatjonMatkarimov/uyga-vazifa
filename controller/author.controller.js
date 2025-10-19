@@ -1,4 +1,5 @@
 const authorSchema = require("../schema/authon.schema")
+const logger = require("../utils/logger")
 
 const postauthor = async (req, res) => {
     try {
@@ -27,11 +28,13 @@ const postauthor = async (req, res) => {
             massage: "bajarildi"
         })
 
+        logger.info(`author created succuess, data ----- fullneme:${fullneme}, bith_date:${bith_date}, death_date${death_date}, periot:${periot}, img:${req.file.filename}, creativite:${creativite}, region:${region}`)
+
     } catch (err) {
         res.status(500).json({
             massage: err
         })
-
+        logger.error(`postauthor error ------ ${err}`)
     }
 }
 const getOneauthor = async (req, res) => {
@@ -39,6 +42,7 @@ const getOneauthor = async (req, res) => {
         const id = req.params.id
         const foundedAutor = await authorSchema.findById(id).populate("books")
         if (!foundedAutor) {
+            logger.info(`get one author ------- author not found id:${id}`)
             return res.status(404).json({
                 massage: "mavjud emas"
             })
@@ -46,12 +50,11 @@ const getOneauthor = async (req, res) => {
         res.status(200).json({
             foundedAutor
         })
-
     } catch (err) {
         res.status(500).json({
             massage: err
         })
-
+        logger.error(`getOneauthor error ------ ${err}`)
     }
 }
 const Deleteauthor = async (req, res) => {
@@ -59,6 +62,7 @@ const Deleteauthor = async (req, res) => {
         const { id } = req.params
         const foundedAutor = await authorSchema.findById(id)
         if (!foundedAutor) {
+            logger.info(`delete author ------- author not found id:${id}`)
             return res.status(404).json({
                 massage: "mavjud emas"
             })
@@ -69,11 +73,12 @@ const Deleteauthor = async (req, res) => {
         res.status(201).json({
             massage: "bajarildi"
         })
+        logger.info(`author delete succuess id:${id}`)
     } catch (err) {
         res.status(500).json({
             massage: err
         })
-
+        logger.error(`Deleteauthor error ------ ${err}`)
     }
 }
 const getauthors = async (req, res) => {
@@ -82,12 +87,12 @@ const getauthors = async (req, res) => {
         res.status(200).json({
             authors
         })
-
+        logger.info(`get authors succuess`)
     } catch (err) {
         res.status(500).json({
             massage: err
         })
-
+        logger.error(`getauthors error ------ ${err}`)
     }
 }
 
@@ -100,12 +105,12 @@ const search = async (req, res) => {
         res.status(200).json({
             authors
         })
-
+        logger.info(`author search succuess ------ quary:${quary}`)
     } catch (err) {
         res.status(500).json({
             massage: err
         })
-
+        logger.error(`author search error ------ ${err}`)
     }
 }
 
@@ -124,6 +129,7 @@ const putauthor = async (req, res) => {
 
         const foundedAutor = await authorSchema.findById(id)
         if (!foundedAutor) {
+            logger.info(`put author ------- author not found id:${id}`)
             return res.status(404).json({
                 massage: "mavjud emas"
             })
@@ -143,11 +149,12 @@ const putauthor = async (req, res) => {
         res.status(201).json({
             massage: "bajarildi"
         })
+        logger.info(`author updated succuess, data ----- fullneme:${fullneme}, bith_date:${bith_date}, death_date${death_date}, periot:${periot}, img:${req.file.filename}, creativite:${creativite}, region:${region}`)
     } catch (err) {
         res.status(500).json({
             massage: err
         })
-
+        logger.error(`update author error ------ ${err}`)
     }
 }
 

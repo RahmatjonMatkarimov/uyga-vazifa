@@ -1,11 +1,13 @@
 const jwt = require("jsonwebtoken")
 const { accesToken } = require("../utils/generator_token")
+const logger = require("../utils/logger")
 
 module.exports = (req, res, next) => {
     try {
         const token = req.cookies.RefreshToken
 
         if (!token) {
+            logger.error(`refresh token middleware error --- token not found`)
             res.status(400).json({ massage: "token not found" })
         }
 
@@ -17,9 +19,8 @@ module.exports = (req, res, next) => {
             role: req.user.role,
         }
 
-        const acces = accesToken()
+        const acces = accesToken(payload)
         res.cookie("AccessToken", acces, { httpOnly: true, maxAge: 15 * 60 * 1000 })
-
 
         next()
     } catch (error) {

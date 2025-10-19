@@ -7,8 +7,9 @@ const postEbook = async (req, res) => {
         } = req.body
 
         await EbookSchema.create({
-            book_id, author_id, ebook_url:req.file.filename
+            book_id, author_id, ebook_url: req.file.filename
         })
+        logger.info(`postEbook data book_id: ${book_id}, author_id:${author_id}, filename:${req.file.filename}`)
 
         res.status(201).json({
             massage: "bajarildi"
@@ -18,7 +19,7 @@ const postEbook = async (req, res) => {
         res.status(500).json({
             massage: err
         })
-
+        logger.error("postEbook error ----" + err)
     }
 }
 const getOneEbook = async (req, res) => {
@@ -26,10 +27,14 @@ const getOneEbook = async (req, res) => {
         const id = req.params.id
         const foundedAutor = await EbookSchema.find({ book_id: id })
         if (!foundedAutor) {
+            logger.info("getOneEbook ----- ebook not found id " + id)
+
             return res.status(404).json({
                 massage: "mavjud emas"
             })
         }
+        logger.info("getOneEbook success")
+
         res.status(200).json({
             foundedAutor
         })
@@ -38,7 +43,7 @@ const getOneEbook = async (req, res) => {
         res.status(500).json({
             massage: err
         })
-
+        logger.error("getOneEbook error ----" + err)
     }
 }
 const DeleteEbook = async (req, res) => {
@@ -46,6 +51,7 @@ const DeleteEbook = async (req, res) => {
         const { id } = req.params
         const foundedAutor = await EbookSchema.findById(id)
         if (!foundedAutor) {
+            logger.info("ebook not found" + id)
             return res.status(404).json({
                 massage: "mavjud emas"
             })
@@ -56,6 +62,8 @@ const DeleteEbook = async (req, res) => {
         res.status(201).json({
             massage: "bajarildi"
         })
+        logger.info("DeleteEbook success")
+
     } catch (err) {
         res.status(500).json({
             massage: err
