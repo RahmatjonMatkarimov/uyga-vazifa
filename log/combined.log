@@ -1,25 +1,4 @@
 info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
 info: Backend ishladi 3000 Portda
 info: connect to db
 info: Backend ishladi 3000 Portda
@@ -28,48 +7,27 @@ info: Backend ishladi 3000 Portda
 info: connect to db
 info: Backend ishladi 3000 Portda
 info: connect to db
+info: register DATA ------ username:rahmatjon_web, email:rahmatjon974@gmail.com, password:admin
+error: register error ----- ReferenceError: otp is not defined
+info: sent otp email:rahmatjon974@gmail.com, verify code: 845275
 info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
+info: register DATA ------ username:rahmatjon_web, email:rahmatjon974@gmail.com, password:admin
+info: connect to db
+info: bu foydalanuvchi allaqachon mavjud rahmatjon974@gmail.com
+info: register DATA ------ username:john_doe, email:john@example.com, password:Password123!
+error: register error ----- ReferenceError: otpTime is not defined
+info: sent otp email:john@example.com, verify code: 648151
 info: Backend ishladi 3000 Portda
 info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
+info: register DATA ------ username:john_doe, email:john@example.com, password:Password123!
+info: bu foydalanuvchi allaqachon mavjud john@example.com
+info: register DATA ------ username:john_doe, email:john@example.com, password:Password123!
+info: registerd succuss: ------ email:john@example.com, username:john_doe, password:Password123!, otp:045852, otpTime: 1760855881521
+info: sent otp email:john@example.com, verify code: 045852
 info: Backend ishladi 3000 Portda
 info: connect to db
 info: Backend ishladi 3000 Portda
 info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
 info: Backend ishladi 3000 Portda
 info: Backend ishladi 3000 Portda
 info: Backend ishladi 3000 Portda
@@ -85,6 +43,43 @@ info: connect to db
 info: Backend ishladi 3000 Portda
 info: connect to db
 info: Backend ishladi 3000 Portda
+info: connect to db
+info: register DATA ------ username:john_doe, email:john@example.com, password:Password123!
+info: bu foydalanuvchi allaqachon mavjud john@example.com
+info: register DATA ------ username:john_doe, email:john@examfple.com, password:Password123!
+info: registerd succuss: ------ email:john@examfple.com, username:john_doe, password:Password123!, otp:581575, otpTime: 1760856172881
+info: sent otp email:john@examfple.com, verify code: 581575
+info: Backend ishladi 3000 Portda
+info: connect to db
+info: verify: user not found, email:john@example.com
+info: Backend ishladi 3000 Portda
+info: connect to db
+info: Backend ishladi 3000 Portda
+info: connect to db
+info: Backend ishladi 3000 Portda
+info: connect to db
+info: verify: user not found, email:john@example.com
+info: Backend ishladi 3000 Portda
+info: connect to db
+error: verify error ----- ReferenceError: otpTime is not defined
+info: Backend ishladi 3000 Portda
+info: connect to db
+info: verify: otp expired, otpTime:1760855881521
+info: register DATA ------ username:john_doe, email:john@example.com, password:Password123!
+info: registerd succuss: ------ email:john@example.com, username:john_doe, password:Password123!, otp:241038, otpTime: 1760856428169
+info: sent otp email:john@example.com, verify code: 241038
+info: verify soccuess
+info: Backend ishladi 3000 Portda
+info: connect to db
+warn: Authorization error — invalid token
+info: Backend ishladi 3000 Portda
+info: connect to db
+info: Backend ishladi 3000 Portda
+info: Backend ishladi 3000 Portda
+info: connect to db
+info: Backend ishladi 3000 Portda
+info: connect to db
+info: authorithation error  ---- you are not admin and superAdmin
 info: Backend ishladi 3000 Portda
 info: Backend ishladi 3000 Portda
 info: connect to db
@@ -93,75 +88,6 @@ info: connect to db
 info: Backend ishladi 3000 Portda
 info: connect to db
 info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
-info: Backend ishladi 3000 Portda
-info: connect to db
 info: Backend ishladi 3000 Portda
 info: connect to db
 info: Backend ishladi 3000 Portda

@@ -11,6 +11,7 @@ const register = async (req, res) => {
             email,
             password,
         } = req.body
+        console.log("isjlasdf");
 
         logger.info(`register DATA ------ username:${username}, email:${email}, password:${password}`)
         const foundedUser = await authSchema.find({ email })
@@ -34,7 +35,7 @@ const register = async (req, res) => {
             otpTime: data
         })
 
-        logger.info(`registerd succuss: ------ email:${email}, username:${username}, password:${password}, otp:${otp}, otpTime: ${otpTime}`)
+        logger.info(`registerd succuss: ------ email:${email}, username:${username}, password:${password}, otp:${rendomNum}, otpTime: ${data}`)
 
         res.status(201).json({
             massage: "registered"
@@ -56,14 +57,14 @@ const verify = async (req, res) => {
         } = req.body
 
         const foundedUser = await authSchema.findOne({ email })
-        if (!foundedUser.length) {
+        if (!foundedUser) {
             logger.info(`verify: user not found, email:${email}`)
             return res.status(404).json({ massage: "user not found" })
         }
 
         const time = Date.now()
         if (foundedUser.otpTime < time) {
-            logger.info(`verify: otp expired, otpTime:${otpTime}`)
+            logger.info(`verify: otp expired, otpTime:${foundedUser.otpTime}`)
             return res.status(400).json({ massage: "otp expired" })
         }
 

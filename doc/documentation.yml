@@ -4,7 +4,7 @@ info:
   description: API for user authentication, managing audio books, authors, books, citations, and eBooks, including user registration, verification, login, logout, password reset, refresh token generation, audio book CRUD operations, author CRUD operations with search, book CRUD operations with search, citation CRUD operations, and eBook CRUD operations.
   version: 1.0.0
 servers:
-  - url: http://localhost:3000/
+  - url: http://localhost:3000
     description: Local development server
 paths:
   /register:

@@ -1,17 +1,23 @@
-const joi = require("joi")
+const Joi = require("joi")
 
-const authValidator = (data) => {
-    const schema = joi.object({
-        username: joi.string().min(3).max(80).required(),
-        email: joi.string().min(3).max(80).required(),
-        password: joi.string().min(8).max(80).required(),
-        role: joi.string().valid("user", "admin", "superAdmin").required(),
-        otp: joi.string().required(),
-        otpTime: joi.number().integer().required(),
-        isVerified: joi.boolean().default(false),
-    })
+const schema = Joi.object({
+    username: Joi.string().min(3).max(80).required(),
+    email: Joi.string().email().min(3).max(80).required(),
+    password: Joi.string().min(8).max(80).required(),
+    role: Joi.string().valid("user", "admin", "superAdmin"),
+    otp: Joi.string(),
+    otpTime: Joi.number().integer(),
+    isVerified: Joi.boolean().default(false),
+})
 
-    return schema.validate(data)
+const authValidatorMiddleware = (req, res, next) => {
+    const { error } = schema.validate(req.body)
+    if (error) {
+        return res.status(400).json({
+            message: error
+        })
+    }
+    next()
 }
 
-module.exports = authValidator
+module.exports = authValidatorMiddleware

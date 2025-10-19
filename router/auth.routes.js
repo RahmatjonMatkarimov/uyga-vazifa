@@ -1,13 +1,12 @@
 const { Router } = require("express");
-const { register, login, logout, forgotPassVerify, resetPassword } = require("../controller/auth.controller");
-const { verify } = require("jsonwebtoken");
+const { register, login, logout, forgotPassVerify, resetPassword, verify } = require("../controller/auth.controller");
 const refreshToken = require("../middleware/refreshToken");
-const authValidator = require("../validator/auth.validator");
+const authValidatorMiddleware = require("../validator/auth.validator");
 const authRouter = Router();
 
 
-authRouter.post("/register", authValidator, register)
-authRouter.post("/verify", verify)
+authRouter.post("/register",authValidatorMiddleware, register)
+authRouter.post("/verify", verify   )
 authRouter.post("/login", login)
 authRouter.post("/refreshToken", refreshToken)
 authRouter.get("/logout", logout)
