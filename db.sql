@@ -1,46 +1,57 @@
-CREATE DATABASE universitet;
-\c universitet;
-CREATE TABLE talabalar (
-    student_id SERIAL PRIMARY KEY,
-    ism VARCHAR(50),
-    shahar VARCHAR(50),
-    yosh INT,
-    baho INT,
-    birth_date DATE
+CREATE DATABASE shopdb;
+\c shopdb;
+
+CREATE TABLE customers (
+    id serial primary key,
+    name varchar(100) not null,
+    phone varchar(20)
 );
-CREATE TABLE kurslar (
-    kurs_id SERIAL PRIMARY KEY,
-    kurs_nomi VARCHAR(50),
-    student_id INT REFERENCES talabalar(student_id),
-    baho INT
+INSERT INTO customers (name, phone) VALUES('ali', '123'),('vali', '123'),('aziz', '123'),('dilmurod', '123'),('murodbek', '123');
+
+CREATE TABLE products (
+    id serial primary key,
+    name varchar(100) not null,
+    price int not null
 );
-CREATE TABLE oqituvchilar (
-    teacher_id SERIAL PRIMARY KEY,
-    ism VARCHAR(50),
-    shahar VARCHAR(50),
-    kurs_nomi VARCHAR(50),
-    baho INT
+INSERT INTO products (name, price) VALUES('telefon', 150000),('noutbuk', 150000),('planshet', 150000),('kamera', 150000),('sichqoncha', 150000);
+
+CREATE TABLE orders (
+    id serial primary key,
+    customer_id int not null,
+    constraint fk_customer_id foreign key(customer_id) references customers(id) on delete cascade on update cascade,
+    product_id int not null,
+    constraint fk_product_id foreign key(product_id) references products(id) on delete cascade on update cascade,
+    quantity int not null
 );
-INSERT INTO talabalar (ism, shahar, yosh, baho, birth_date) VALUES('Ali', 'Toshkent', 20, 85, '2004-05-12'),('Vali', 'Samarqand', 22, 72, '2002-07-25'),('Dilshod', 'Andijon', 25, 90, '2000-10-03'),('Shahnoza', 'Toshkent', 18, 65, '2006-03-15'),('Shirin', 'Buxoro', 21, 78, '2003-12-22'),('Sardor', 'Namangan', 19, 88, '2005-01-09');
-INSERT INTO kurslar (kurs_nomi, student_id, baho) VALUES('Matematika', 1, 80),('Fizika', 2, 70),('Ingliz tili', 3, 95),('Tarix', 4, 60),('Kimyo', 5, 85),('Biologiya', 6, 75);
-INSERT INTO oqituvchilar (ism, shahar, kurs_nomi, baho) VALUES('Rustam', 'Toshkent', 'Matematika', 90),('Ravshan', 'Samarqand', 'Fizika', 88),('Malika', 'Buxoro', 'Kimyo', 92),('Rano', 'Xorazm', 'Tarix', 86),('Rahmon', 'Namangan', 'Biologiya', 80),('Aziza', 'Andijon', 'Ingliz tili', 89);
-CREATE INDEX idx_student_id ON talabalar(student_id);
-CREATE INDEX idx_teacher_id ON oqituvchilar(teacher_id);
-SELECT kurs_nomi, student_id, baho
-FROM kurslar
-ORDER BY baho DESC
-LIMIT 10;
-SELECT kurs_nomi, AVG(baho) AS ortacha_baho
-FROM oqituvchilar
-GROUP BY kurs_nomi
-HAVING AVG(baho) > 85;
-SELECT ism, shahar, 'talaba' AS shaxs_turi FROM talabalar
-UNION
-SELECT ism, shahar, 'oqituvchi' AS shaxs_turi FROM oqituvchilar;
-SELECT * FROM talabalar
-WHERE (yosh BETWEEN 18 AND 25) OR (shahar IN ('Samarqand', 'Xorazm'));
-SELECT * FROM talabalar
-WHERE ism LIKE '%o';
-SELECT * FROM oqituvchilar
-WHERE ism ILIKE 'r%';
-SELECT * FROM oqituvchilar OFFSET 20 LIMIT 5;
+INSERT INTO orders (customer_id, product_id, quantity) VALUES(1, 2, 1),(2, 1, 2),(3, 3, 1),(4, 5, 3),(5, 4, 1);
+
+
+SELECT c.name AS mijoz, p.name AS mahsulot, o.quantity AS miqdor FROM orders o JOIN customers c ON o.customer_id = c.id JOIN products p ON o.product_id = p.id;
+SELECT c.name, p.name, p.price FROM orders o JOIN customers c ON o.customer_id = c.id JOIN products p ON o.product_id = p.id;
+SELECT p.name AS mahsulot, o.id AS buyurtma_id FROM products p LEFT JOIN orders o ON p.id = o.product_id WHERE o.id IS NULL;
+SELECT * FROM customers c FULL JOIN orders o ON c.id = o.customer_id;
+
+CREATE TABLE students (
+    id serial primary key,
+    name varchar(100) not null
+);
+INSERT INTO students (name) VALUES('ali'), ('vali'), ('aziz'), ('dilmurod'), ('murodbek');
+
+CREATE TABLE courses (
+    id serial primary key,
+    name varchar(100) not null
+);
+INSERT INTO courses (name) VALUES('matematika'), ('ingliz tili'), ('dasturlash'), ('fizika'), ('tarix');
+
+CREATE TABLE enrollments (
+    id serial primary key,
+    student_id int not null,
+    constraint fk_student_id foreign key(student_id) references students(id) on delete cascade on update cascade,
+    course_id int not null,
+    constraint fk_course_id foreign key(course_id) references courses(id) on delete cascade on update cascade
+);
+INSERT INTO enrollments (student_id, course_id) VALUES(1, 1), (1, 3), (2, 2), (3, 1), (3, 4), (4, 5);
+
+
+SELECT s.name AS talaba, c.name AS kurs FROM enrollments e JOIN students s ON e.student_id = s.id JOIN courses c ON e.course_id = c.id;
+SELECT s.name AS talaba, c.name AS kurs FROM students s FULL JOIN enrollments e ON s.id = e.student_id FULL JOIN courses c ON e.course_id = c.id;
