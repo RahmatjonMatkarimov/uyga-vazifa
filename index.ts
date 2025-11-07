@@ -1,193 +1,255 @@
-function upperCaseKeys(obj: object): object {
-    const result: { [key: string]: any } = {};
-    for (let key in obj) {
-        result[key.toUpperCase()] = obj[key as keyof typeof obj];
-    }
-    return result;
+function identity<T>(value: T): T {
+    return value;
 }
+console.log(identity(42));
 
-const data = { name: "Ali", age: 25, country: "Uzbekistan" };
-console.log(upperCaseKeys(data));
+function getFirstElement<T>(arr: T[]): T | undefined {
+    return arr[0];
+}
+console.log(getFirstElement([1, 2, 3]));
 
-function fizzBuzz(n: number): string[] {
-    const result: string[] = [];
-    for (let i = 1; i <= n; i++) {
-        if (i % 3 === 0 && i % 5 === 0) {
-            result.push("FizzBuzz");
-        } else if (i % 3 === 0) {
-            result.push("Fizz");
-        } else if (i % 5 === 0) {
-            result.push("Buzz");
-        } else {
-            result.push(String(i));
+function getLastElement<T>(arr: T[]): T | undefined {
+    return arr[arr.length - 1];
+}
+console.log(getLastElement(["a", "b", "c"]));
+
+function createKeyValuePair<K extends string, V>(key: K, value: V): Record<K, V> {
+    return { [key]: value } as Record<K, V>;
+}
+console.log(createKeyValuePair("age", 25));
+
+function arrayOfLength<T>(arr: T[], length: number): T[] {
+    if (arr.length !== length) {
+        throw new Error(`Array uzunligi ${length} bo'lishi kerak`);
+    }
+    return arr;
+}
+console.log(arrayOfLength([1, 2, 3], 3));
+
+function getSmallestNumber(arr: number[]): number {
+    return Math.min(...arr);
+}
+console.log(getSmallestNumber([10, 5, 7, 3]));
+
+function mergeArrays<T>(arr1: T[], arr2: T[]): T[] {
+    return [...arr1, ...arr2];
+}
+console.log(mergeArrays([1, 2], [3, 4]));
+
+function sortArray<T>(arr: T[]): T[] {
+    return arr;
+}
+console.log(sortArray([3, 2, 1].sort())); // [1,2,3]
+
+interface CRUDOperations<T> {
+    create: (item: T) => void;
+    read: () => T[];
+    update: (id: number, item: T) => void;
+    delete: (id: number) => void;
+}
+const crudExample: CRUDOperations<string> = {
+    create: (item) => console.log("Created:", item),
+    read: () => ["a", "b"],
+    update: (id, item) => console.log(`Updated ${id} -> ${item}`),
+    delete: (id) => console.log("Deleted", id)
+};
+crudExample.create("Item");
+
+class GenericCollection<T> {
+    private items: T[] = [];
+
+    addItem(item: T): void {
+        this.items.push(item);
+    }
+
+    removeItem(index: number): T | undefined {
+        return this.items.splice(index, 1)[0];
+    }
+
+    getLength(): number {
+        return this.items.length;
+    }
+
+    getAllItems(): T[] {
+        return this.items;
+    }
+}
+const collection = new GenericCollection<number>();
+collection.addItem(10);
+collection.addItem(20);
+console.log(collection.getAllItems());
+
+function constrainedFunction<T extends number | string>(value: T): T {
+    return value;
+}
+console.log(constrainedFunction("hello world"));
+
+function reverseArray<T>(arr: T[]): T[] {
+    const newArray: T[] = [];
+    for (const element of arr) {
+        newArray.push(element);
+    }
+    return newArray;
+}
+console.log(reverseArray([1, 2, 3]));
+
+class KeyValueStore<K extends string, V> {
+    private storage: Map<K, V> = new Map();
+
+    set(key: K, value: V): void {
+        this.storage.set(key, value);
+    }
+
+    get(key: K): V | undefined {
+        return this.storage.get(key);
+    }
+
+    delete(key: K): boolean {
+        return this.storage.delete(key);
+    }
+}
+const store = new KeyValueStore<string, number>();
+store.set("x", 99);
+console.log(store.get("x"));
+store.delete("x");
+
+class Stack<T> {
+    private items: T[] = [];
+
+    push(item: T): void {
+        this.items.push(item);
+    }
+
+    pop(): T | undefined {
+        return this.items.pop();
+    }
+
+    peek(): T | undefined {
+        return this.items[this.items.length - 1];
+    }
+
+    isEmpty(): boolean {
+        return this.items.length === 0;
+    }
+}
+const stack = new Stack<string>();
+stack.push("A");
+stack.push("B");
+console.log(stack.peek());
+console.log(stack.pop());
+
+function groupBy<T>(arr: T[], key: keyof T): Map<any, T[]> {
+    const grouped = new Map<any, T[]>();
+
+    for (const item of arr) {
+        const keyValue = item[key];
+        if (!grouped.has(keyValue)) {
+            grouped.set(keyValue, []);
         }
+        grouped.get(keyValue)!.push(item);
     }
-    return result;
+
+    return grouped;
+}
+const people = [
+    { name: "Ali", age: 20 },
+    { name: "Vali", age: 20 },
+    { name: "Sami", age: 25 },
+];
+console.log(groupBy(people, "age"));
+
+function createPair<K extends string, V>(key: K, value: V) {
+    return { key, value };
+}
+console.log(createPair("x", 10));
+
+function validateArrayLength<T>(arr: T[], maxLength: number): T[] {
+    if (arr.length > maxLength) {
+        throw new Error("Array juda uzun!");
+    }
+    return arr;
+}
+console.log(validateArrayLength([1, 2], 3 - 1));
+
+class Queue<T> {
+    private items: T[] = [];
+
+    enqueue(item: T): void {
+        this.items.push(item);
+    }
+
+    dequeue(): T | undefined {
+        return this.items.shift();
+    }
+
+    peek(): T | undefined {
+        return this.items[0];
+    }
+
+    isEmpty(): boolean {
+        return this.items.length === 0;
+    }
+}
+const queue = new Queue<number>();
+queue.enqueue(1);
+console.log(queue.dequeue());
+
+interface TreeNode<T> {
+    value: T;
+    children?: TreeNode<T>[];
 }
 
-console.log(fizzBuzz(15));
+function createTreeNode<T>(value: T): TreeNode<T> {
+    return { value };
+}
+const root = createTreeNode("root");
+console.log(root);
 
-function getPermutations(str: string): string[] {
-    if (str.length <= 1) return [str];
+function filterByType<T>(arr: any[], type: string): any[] {
+    return arr.filter(item => typeof item === type);
+}
+console.log(filterByType([1, "a", true, 5], "number"));
 
-    const result: string[] = [];
-    for (let i = 0; i < str.length; i++) {
-        const char = str[i];
-        const remaining = str.slice(0, i) + str.slice(i + 1);
-        const perms = getPermutations(remaining);
+function removeDuplicates<T>(arr: T[]): T[] {
+    return [...new Set(arr)];
+}
+console.log(removeDuplicates([1, 2, 2, 3, 3]));
 
-        for (let perm of perms) {
-            result.push(char + perm);
-        }
+class Pair<T, U> {
+    constructor(
+        public first: T,
+        public second: U
+    ) { }
+
+    toString(): string {
+        return `First: ${this.first}, Second: ${this.second}`;
     }
-    return result;
+
+    display(): void {
+        console.log(this.toString());
+    }
+}
+const pair = new Pair("A", 123);
+pair.display();
+
+interface APIResponse<T> {
+    success: boolean;
+    data: T;
+    error?: string;
 }
 
-console.log(getPermutations("abc"));
-
-interface DiffResult {
-    [key: string]: {
-        old: any;
-        new: any;
+function createResponse<T>(data: T): APIResponse<T> {
+    return {
+        success: true,
+        data: data
     };
 }
+console.log(createResponse({ id: 1, name: "Rahmatjon" }));
 
-function jsonDiff(obj1: object, obj2: object): object {
-    const diff: DiffResult = {};
-
-    for (let key in obj1) {
-        if (obj1[key as keyof typeof obj1] !== obj2[key as keyof typeof obj2]) {
-            diff[key] = {
-                old: obj1[key as keyof typeof obj1],
-                new: obj2[key as keyof typeof obj2]
-            };
-        }
-    }
-
-    for (let key in obj2) {
-        if (!(key in obj1)) {
-            diff[key] = {
-                old: undefined,
-                new: obj2[key as keyof typeof obj2]
-            };
-        }
-    }
-
-    return diff;
+interface User {
+    id: number;
+    name: string;
+    email: string;
 }
-
-const oldData = { name: "Ali", age: 25, city: "Toshkent" };
-const newData = { name: "Ali", age: 26, country: "Uzbekistan" };
-console.log(jsonDiff(oldData, newData));
-
-
-
-function sortIPs(ips: string[]): string[] {
-    return ips.sort((a, b) => {
-        const partsA = a.split(".").map((x) => Number(x));
-        const partsB = b.split(".").map((x) => Number(x));
-
-        for (let i = 0; i < 4; i++) {
-            if (partsA[i] !== partsB[i]) {
-                return (partsA[i] ?? 0) - (partsB[i] ?? 0);
-            }
-        }
-        return 0;
-    });
-}
-
-console.log(sortIPs(["192.168.1.1", "192.168.1.10", "192.168.1.5", "192.168.1.4"]));
-
-function compressString(str: string): string {
-    if (str.length === 0) return "";
-
-    let result: string = "";
-    let count: number = 1;
-
-    for (let i = 1; i <= str.length; i++) {
-        if (str[i] === str[i - 1]) {
-            count++;
-        } else {
-            result += str[i - 1];
-            if (count > 1) {
-                result += count;
-            }
-            count = 1;
-        }
-    }
-
-    return result;
-}
-
-console.log(compressString("aaabbcddd"));
-
-
-function isValidSudoku(board: number[][]): boolean {
-    for (let row of board) {
-        if (!isValidSet(row)) return false;
-    }
-
-    for (let col = 0; col < 9; col++) {
-        const column: number[] = [];
-        for (let row = 0; row < 9; row++) {
-            column.push(board[row]?.[col] ?? 0);
-        }
-        if (!isValidSet(column)) return false;
-    }
-
-    for (let blockRow = 0; blockRow < 3; blockRow++) {
-        for (let blockCol = 0; blockCol < 3; blockCol++) {
-            const block: number[] = [];
-            for (let i = 0; i < 3; i++) {
-                for (let j = 0; j < 3; j++) {
-                    block.push(board[blockRow * 3 + i]?.[blockCol * 3 + j] ?? 0);
-                }
-            }
-            if (!isValidSet(block)) return false;
-        }
-    }
-    return true;
-}
-
-function isValidSet(arr: number[]): boolean {
-    const seen = new Set<number>();
-    for (let num of arr) {
-        if (num !== 0) {
-            if (seen.has(num) || num < 1 || num > 9) {
-                return false;
-            }
-            seen.add(num);
-        }
-    }
-    return true;
-}
-
-const board: number[][] = [
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-];
-console.log(isValidSudoku(board));
-
-
-function groupAnagrams(words: string[]): string[][] {
-    const map = new Map<string, string[]>();
-
-    for (let word of words) {
-        const sorted: string = word.split('').sort().join('');
-        if (!map.has(sorted)) {
-            map.set(sorted, []);
-        }
-        map.get(sorted)!.push(word);
-    }
-
-    return Array.from(map.values());
-}
-
-console.log(groupAnagrams(["eat", "tea", "tan", "ate", "nat", "bat"]));
+const user: User = { id: 1, name: "Rahmatjon", email: "rahmatjon974@gmail.com" };
+console.log(user);
