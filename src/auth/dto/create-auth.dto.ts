@@ -1,10 +1,13 @@
-export class RegisterDto {
-    id: number;
+export class Register {
     username: string;
     email: string;
     password: string;
 }
-export class LoginDto {
-    username: string;
+export class Login {
+    email: string;
     password: string;
+}
+export class Verify {
+    otp: string;
+    email: string;
 }
