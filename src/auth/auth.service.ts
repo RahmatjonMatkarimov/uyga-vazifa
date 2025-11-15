@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Auth } from './entities/auth.entity';
 import * as bcrypt from 'bcrypt'
 import * as nodemailer from 'nodemailer'
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +15,7 @@ export class AuthService {
       pass: process.env.APP_PASS
     }
   })
-  constructor(@InjectModel(Auth) private authModel: typeof Auth) { }
+  constructor(@InjectModel(Auth) private authModel: typeof Auth, private jwtService: JwtService) { }
   async register(register: Register) {
     const { username, password, email } = register
     const user = await this.authModel.findOne({ where: { email } })
@@ -53,7 +54,6 @@ export class AuthService {
     const now = Date.now()
 
     if (!user) throw new NotFoundException('user not found')
-    console.log(`${user.dataValues.otp_time < now} ${user.dataValues.otp_time} ${now}`);
     if (user.dataValues.otp_time < now) throw new UnauthorizedException("otp time expired")
     if (+user.dataValues.otp !== +otp) throw new UnauthorizedException("wrong otp")
 
@@ -62,8 +62,20 @@ export class AuthService {
     return { message: "verified" };
   }
 
-  login(login: Login) {
+  async login(login: Login) {
+    const { email, password } = login
+    const user = await this.authModel.findOne({ where: { email } })
+    if (!user) throw new NotFoundException('user not found')
+    if (user.dataValues.isVerify) throw new UnauthorizedException("not verify")
 
-    return;
+    const isMatch = await bcrypt.compare(password, user.dataValues.password)
+    if (isMatch) {
+      const payload = { sub: user.id, username: user.dataValues.username, role: user.dataValues.role };
+      return {
+        access_token: await this.jwtService.signAsync(payload),
+      };
+    } else {
+      throw new UnauthorizedException("wrong password")
+    }
   }
 }

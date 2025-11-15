@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import { Column, Model, Table } from "sequelize-typescript";
+import { Role } from "src/shared/constants/role.enum";
 
 @Table
 export class Auth extends Model {
@@ -23,10 +24,10 @@ export class Auth extends Model {
 
     @Column({
         allowNull: false,
-        type: DataTypes.ENUM('user', 'admin', 'superAdmin'),
-        defaultValue: 'user'
+        type: DataTypes.ENUM(...Object.keys(Role)),
+        defaultValue: Role.User
     })
-    role: 'user' | 'admin' | 'superAdmin'
+    role: Role
 
     @Column({
         allowNull: false,
