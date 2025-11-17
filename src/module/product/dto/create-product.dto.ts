@@ -4,15 +4,24 @@ import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 export class CreateProductDto {
     @IsString()
     @IsNotEmpty()
-    @ApiProperty()
+    @ApiProperty({
+        example: "iPhone 16",
+        description: "Mahsulot nomi",
+    })
     title: string;
 
-    @ApiProperty()
+    @ApiProperty({
+        example: "shunchaki",
+        description: "Mahsulot haqida to‘liq ma’lumot",
+    })
     @IsString()
     @IsNotEmpty()
     description: string;
 
-    @ApiProperty()
+    @ApiProperty({
+        example: 1000,
+        description: "Mahsulot narxi",
+    })
     @IsNotEmpty()
     @IsNumber()
     prise: number;

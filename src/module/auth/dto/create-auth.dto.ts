@@ -4,38 +4,42 @@ import { IsEmail, IsString, Length, Max, Min } from "class-validator";
 export class Register {
     @IsString()
     @Length(3, 50)
-    @ApiProperty()
+    @ApiProperty({ example: "rahmatjon", })
     username: string;
 
     @IsEmail()
     @Length(3, 200)
-    @ApiProperty()
+    @ApiProperty({ example: "rahmatjon@gmail.com", })
     email: string;
 
     @IsString()
-    @ApiProperty()
     @Length(8, 200)
+    @ApiProperty({ example: "admin123!", })
     password: string;
 }
+
+
 export class Login {
-    @ApiProperty()
+    @ApiProperty({ example: "rahmatjon@gmail.com", })
     @IsString()
     @Length(3, 50)
     email: string;
 
-    @ApiProperty()
+    @ApiProperty({ example: "admin123!", })
     @Length(8, 200)
     @IsString()
     password: string;
 }
+
+
 export class Verify {
-    @ApiProperty()
+    @ApiProperty({ example: "123456", })
     @Min(100000)
     @Max(999999)
     @IsString()
     otp: string;
 
-    @ApiProperty()
+    @ApiProperty({ example: "rahmatjon@gmail.com", })
     @Length(3, 50)
     @IsString()
     email: string;
