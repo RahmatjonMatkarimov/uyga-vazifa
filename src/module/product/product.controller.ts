@@ -6,10 +6,12 @@ import { AuthGuard } from 'src/common/guard/auth.guard';
 import { RolesGuard } from 'src/common/guard/roles.guard';
 import { Roles } from 'src/common/decorator/roles.decarotor';
 import { Role } from 'src/shared/constants/role.enum';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) { }
+  @ApiBody({ type: [CreateProductDto] })
   @UseGuards(RolesGuard)
   @Roles(Role.Admin)
   @HttpCode(201)
@@ -34,6 +36,7 @@ export class ProductController {
     return this.productService.findOne(+id);
   }
 
+  @ApiBody({type:[UpdateProductDto]})
   @UseGuards(RolesGuard)
   @Roles(Role.Admin)
   @HttpCode(201)
