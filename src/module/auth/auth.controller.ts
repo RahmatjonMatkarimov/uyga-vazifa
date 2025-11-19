@@ -17,6 +17,7 @@ export class AuthController {
   @Post("login")
   login(@Body() login: Login) {
     return this.authService.login(login);
+
   }
   
   @ApiBody({type:[Verify]})

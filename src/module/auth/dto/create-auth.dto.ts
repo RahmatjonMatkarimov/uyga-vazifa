@@ -1,22 +1,42 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsString, Length, Max, Min } from "class-validator";
+import { IsEmail, IsString,IsOptional, Length, Max, Min } from "class-validator";
 
 export class Register {
+
     @IsString()
     @Length(3, 50)
-    @ApiProperty({ example: "rahmatjon", })
+    @ApiProperty({ example: "rahmatjon" })
     username: string;
+
+    @IsString()
+    @Length(2, 50)
+    @ApiProperty({ example: "Rahmatjon" })
+    firstName: string;
+
+    @IsString()
+    @Length(2, 50)
+    @ApiProperty({ example: "Matkarimov" })
+    lastName: string;
 
     @IsEmail()
     @Length(3, 200)
-    @ApiProperty({ example: "rahmatjon@gmail.com", })
+    @ApiProperty({ example: "rahmatjon@gmail.com" })
     email: string;
 
     @IsString()
     @Length(8, 200)
-    @ApiProperty({ example: "admin123!", })
+    @ApiProperty({ example: "Admin123!" })
     password: string;
+
+    @IsOptional()
+    @ApiProperty({ example: "https://example.com/profile.jpg" })
+    avatar?: string;
+
+    @IsOptional()
+    @ApiProperty({ example: "Frontend developer, Vue.js master" })
+    bio?: string;
 }
+
 
 
 export class Login {

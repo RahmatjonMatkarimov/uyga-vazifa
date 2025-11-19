@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Login, Register, Verify } from './dto/create-auth.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Auth } from './entities/auth.entity';
@@ -17,36 +17,37 @@ export class AuthService {
   })
   constructor(@InjectModel(Auth) private authModel: typeof Auth, private jwtService: JwtService) { }
   async register(register: Register) {
-    const { username, password, email } = register
-    const user = await this.authModel.findOne({ where: { email } })
+    const { username, firstName, lastName, email, password, avatar, bio } = register;
 
-    if (user) throw new NotFoundException('user already exits')
+    const exists = await this.authModel.findOne({ where: { email } });
+    if (exists) throw new ConflictException("User already exists");
 
-    const hashPassword = await bcrypt.hash(password, 12)
-    const otp_time = Date.now() + 120000
-    const randomNum = Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join("")
+    const hashed = await bcrypt.hash(password, 12);
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    const otp_time = Date.now() + 120000;
 
-    const data = {
+    await this.authModel.create({
       username,
+      firstName,
+      lastName,
+      avatar,
+      bio,
       email,
-      password: hashPassword,
-      otp: randomNum,
+      password: hashed,
+      otp,
       otp_time
-    }
-
-    await this.authModel.create(data)
+    });
 
     await this.transporter.sendMail({
       from: "rahmatjon974@gmail.com",
       to: email,
-      subject: "lesson",
-      text: "shunchaki",
-      html: `<b>${randomNum}</b>`
-    })
+      subject: "Verify your email",
+      html: `<b>Your OTP: ${otp}</b>`
+    });
 
-
-    return { message: "registered please check your email." };
+    return { message: "Registered. Please verify email." };
   }
+
 
   async verify(verify: Verify) {
     const { otp, email } = verify
