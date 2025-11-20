@@ -4,76 +4,126 @@ import TelegramBot from 'node-telegram-bot-api';
 @Injectable()
 export class BotService {
     private bot: TelegramBot;
-    private sessions = new Map();
+
+    private drinks = [
+        {
+            id: 'cola',
+            name: 'Coca-Cola 1L',
+            price: 9000,
+            desc: 'Shakarli gazlangan ichimlik',
+            photo: 'https://platinumlist.net/guide/wp-content/uploads/2023/03/IMG-worlds-of-adventure.webp'
+        },
+        {
+            id: 'fanta',
+            name: 'Fanta 1L',
+            price: 8500,
+            desc: 'Apelsin ta’mli ichimlik',
+            photo: 'https://platinumlist.net/guide/wp-content/uploads/2023/03/IMG-worlds-of-adventure.webp'
+        },
+    ];
 
     constructor() {
         this.bot = new TelegramBot(process.env.BOT_TOKEN as string, { polling: true });
 
-        this.bot.on('message', (msg) => {
+        this.bot.onText(/\/start/, async (msg) => {
             const chatId = msg.chat.id;
-            const text = msg.text;
 
-            let session = this.sessions.get(chatId);
+            await this.bot.sendMessage(chatId, "Assalomu alaykum Mini FastFood xizmatiga xush kelibsiz!");
 
-            if (text === '/start') {
-                session = this.startNewTest(chatId);
-                return;
+            await this.bot.sendMessage(chatId, "Iltimos telefon raqamingizni yuboring", {
+                reply_markup: {
+                    keyboard: [
+                        [{ text: "📱 Raqamni yuborish", request_contact: true }]
+                    ],
+                    resize_keyboard: true,
+                    one_time_keyboard: true
+                }
+            });
+        });
+
+        this.bot.on('contact', async (msg) => {
+            const chatId = msg.chat.id;
+
+            await this.bot.sendMessage(chatId, "Rahmat! Endi manzilingizni yuboring", {
+                reply_markup: {
+                    keyboard: [
+                        [{ text: "Joylashuvni yuborish", request_location: true }]
+                    ],
+                    resize_keyboard: true,
+                    one_time_keyboard: true
+                }
+            });
+        });
+
+        this.bot.on('location', async (msg) => {
+            const chatId = msg.chat.id;
+            const name = msg.chat.first_name;
+
+            await this.bot.sendMessage(chatId, `Rahmat, ${name}! Endi kategoriya tanlang`, {
+                reply_markup: {
+                    keyboard: [
+                        [{ text: "Ichimliklar" }, { text: "Yeguliklar" }],
+                        [{ text: "Shirinliklar" }]
+                    ],
+                    resize_keyboard: true
+                }
+            });
+        });
+
+
+        this.bot.on('message', async (msg) => {
+            const chatId = msg.chat.id;
+
+            if (msg.text === "Ichimliklar") {
+                await this.sendProducts(chatId, this.drinks);
             }
+        });
 
-            const current = session.questions[session.index];
+        this.bot.on('callback_query', async (query) => {
+            const chatId = query.message?.chat.id as number;
+            const productId = query.data as string;
 
-            const userAnswer = Number(text);
+            const product = this.drinks.find((p) => p.id === productId);
+            if (!product) return;
 
-            if (!isNaN(userAnswer) && userAnswer === current.answer) {
-                session.correct++;
-                this.bot.sendMessage(chatId, "tog'ri!");
-            } else {
-                this.bot.sendMessage(chatId, `notog'ri javob: ${current.answer}`);
-            }
+            await this.bot.sendInvoice(
+                chatId,
+                product.name,
+                product.desc,
+                productId,
+                process.env.PAYMENT_PROVIDER_TOKEN as string,
+                "UZS",
+                [
+                    {
+                        label: product.name,
+                        amount: product.price * 100,
+                    }
+                ],
 
-            session.index++;
-
-            // Agar test tugagan bo'lsa
-            if (session.index >= 10) {
-                this.bot.sendMessage(
-                    chatId,
-                    `Test tugadi!\nTo‘g‘ri javoblar soni: ${session.correct} / 10`
-                );
-
-                this.bot.sendMessage(chatId, "Yana ishlamoqchimisiz? /start bosing");
-                this.sessions.delete(chatId);
-                return;
-            }
-
-            const nextQ = session.questions[session.index];
-            this.bot.sendMessage(chatId, `Savol ${session.index + 1}: ${nextQ.text}`);
+            );
         });
     }
 
-    private generateQuestions() {
-        const questions: any = [];
-        for (let i = 0; i < 10; i++) {
-            const a = Math.floor(Math.random() * 10);
-            const b = Math.floor(Math.random() * 10);
-            const text = `${a} + ${b} = ?`;
-            const answer = a + b;
-            questions.push({ text, answer });
+    private async sendProducts(chatId: number, list: any[]) {
+        for (const item of list) {
+            await this.bot.sendPhoto(chatId, item.photo, {
+                caption: `
+<b>${item.name}</b>
+Narxi: <b>${item.price} so'm</b>
+Tarkibi: ${item.desc}
+                `,
+                parse_mode: "HTML",
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            {
+                                text: "Buyurtma berish",
+                                callback_data: item.id
+                            }
+                        ]
+                    ]
+                }
+            });
         }
-        return questions;
-    }
-
-    private startNewTest(chatId: number) {
-        const session = {
-            questions: this.generateQuestions(),
-            index: 0,
-            correct: 0
-        };
-
-        this.sessions.set(chatId, session);
-
-        const first = session.questions[0];
-        this.bot.sendMessage(chatId, `savol boshlanadi!\n\n1-savol: ${first.text}`);
-
-        return session;
     }
 }
